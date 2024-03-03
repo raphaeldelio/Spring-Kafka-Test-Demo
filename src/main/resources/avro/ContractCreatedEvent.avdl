@@ -1,0 +1,7 @@
+@namespace("demo.springkafka")
+protocol ContractCreatedEventProtocol {
+	record ContractCreatedEvent {
+		string contractId;
+		string contractName;
+	}
+}

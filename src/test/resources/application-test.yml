@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: demo-springkafka
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DEFAULT_NULL_ORDERING=HIGH
+    username: postgres
+    password: postgres
+  h2:
+    console:
+      enabled: true
+
+

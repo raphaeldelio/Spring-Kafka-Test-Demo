@@ -1,0 +1,7 @@
+@namespace("demo.springkafka")
+protocol enums {
+	enum ContractEventType {
+		ADDED,
+		UPDATED
+	}
+}

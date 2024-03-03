@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: demo-springkafka
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DEFAULT_NULL_ORDERING=HIGH
+    username: postgres
+    password: postgres
+  h2:
+    console:
+      enabled: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    properties:
+      schema:
+        registry:
+          url: http://localhost:8081
+      specific:
+        avro:
+          reader: true
+
+      security:
+        protocol: PLAINTEXT
+      sasl:
+        mechanism: PLAIN
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      group-id: demo-springkafka
+      client-id: demo-springkafka
+      isolation-level: read_committed
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      transaction-id-prefix: demo-springkafka
+      retries: 3
+    listener:
+      concurrency: 3
+
+
+

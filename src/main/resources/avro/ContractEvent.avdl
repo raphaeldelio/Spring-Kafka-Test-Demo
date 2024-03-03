@@ -1,0 +1,21 @@
+@namespace("demo.springkafka")
+protocol ContractEventProtocol {
+	import idl "ContractEventType.avdl";
+	import idl "ContractCreatedEvent.avdl";
+	import idl "ContractUpdatedEvent.avdl";
+	import idl "ContractPublished.avdl";
+
+	record ContractEvent {
+		string eventId;
+		ContractEventType contractEventType;
+		union {
+			ContractCreatedEvent,
+			ContractUpdatedEvent
+		} event;
+	}
+
+	record ContractPublishedEvent {
+		string eventId;
+		ContractPublished event;
+	}
+}

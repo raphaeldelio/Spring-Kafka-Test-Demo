@@ -1,0 +1,7 @@
+@namespace("demo.springkafka")
+protocol ContractPublishedProtocol {
+	record ContractPublished {
+		string contractId;
+		string contractName;
+	}
+}
