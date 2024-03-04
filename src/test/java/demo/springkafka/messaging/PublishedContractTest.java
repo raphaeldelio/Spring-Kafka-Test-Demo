@@ -2,11 +2,14 @@ package demo.springkafka.messaging;
 
 import demo.springkafka.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.junit.jupiter.api.Test;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
 
 import java.time.Duration;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -25,16 +28,22 @@ class PublishedContractTest extends BaseKafkaIntegrationTest {
                 kafkaTemplate.send(INPUT_TOPIC, contractEvent.getEventId(), contractEvent)
         );
 
+        Consumer<String, Object> consumer = cf.createConsumer();
+        consumer.subscribe(singletonList(OUTPUT_TOPIC));
+
         ContractPublishedEvent[] resultContainer = new ContractPublishedEvent[1];
         await().atMost(Duration.ofSeconds(10)).until(() -> {
-            ConsumerRecord<String, Object> record = kafkaTemplate.receive(OUTPUT_TOPIC, 0 , 0);
-            if (record != null) {
-                if (record.value() instanceof ContractPublishedEvent contractPublishedEvent) {
-                    if (contractPublishedEvent.getEventId().equals("3")) {
+            ConsumerRecords<String, Object> records = KafkaTestUtils.getRecords(consumer, Duration.ofMillis(100));
+
+            records.forEach(record -> {
+                if (record != null) {
+                    log.info("Received: {}", record.value());
+                    if (record.value() instanceof ContractPublishedEvent contractPublishedEvent) {
                         resultContainer[0] = contractPublishedEvent;
                     }
                 }
-            }
+            });
+
             return resultContainer[0] != null;
         });
 
